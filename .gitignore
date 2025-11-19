@@ -1,0 +1,17 @@
+# .gitignore
+# 忽略 Python 缓存文件
+__pycache__/
+*.py[cod]
+
+# 忽略环境配置和密钥
+.env
+.DS_Store
+
+# 🔴 忽略大模型文件夹 (防止 GitHub 报错)
+local_model/
+*.bin
+*.safetensors
+
+# 忽略虚拟环境 (如果有)
+venv/
+.venv/
