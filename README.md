@@ -109,7 +109,6 @@ pip install streamlit torch transformers openai pillow
 
 ### 3. 启动应用
 
-Bash
 
 ```
 streamlit run app.py
