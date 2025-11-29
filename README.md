@@ -1,196 +1,127 @@
-# 🌿 AI Plant Identifier Pro (植物识别与科普助手)
+# 🌿 PlantAI Pro (植物识别与科普助手)
 
+> **基于 ResNet-18 视觉模型 + DeepSeek-V3 大语言模型的智能植物百科系统**
 
+本项目是一个端云结合的 AI 应用。它利用本地部署的深度学习模型（ResNet-18）实现毫秒级的植物身份识别，并结合 DeepSeek 大模型根据地理位置和季节提供生动的科普介绍。
 
-本项目是一个基于深度学习（ResNet-18）和 大语言模型（DeepSeek-V3）的智能植物识别与科普系统。
+**核心模型基于权威的 [Pl@ntNet-300K](https://zenodo.org/records/5645731) 数据集训练，涵盖 1081 种常见植物。**
 
-**核心模型基于权威的 [Pl@ntNet-300K](https://zenodo.org/records/5645731) 数据集训练，该数据集包含 306,146 张高质量植物图像，涵盖了 1081 个常见的植物物种。**
+------
 
+## 🌟 核心特性 (Features)
 
+1. **🚀 极速启动 & 安全配置**:
+   - 采用独特的 `start.py` 启动器。
+   - **API Key 不在网页明文传输**，首次运行时在终端安全输入并本地加密存储，后续自动读取。
+2. **🧠 双引擎架构**:
+   - **本地视觉 (Vision)**: ResNet-18 负责“看”，无需联网即可快速识别植物 ID。
+   - **云端大脑 (LLM)**: DeepSeek-V3 负责“说”，生成结构优美的 Markdown 科普报告。
+3. **🌍 环境感知 (Context-Aware)**:
+   - AI 不仅仅是背书，它会结合你输入的**地点**（如北京公园）和**季节**（如冬季），分析植物为何出现在此处，并提供观察建议。
+4. **🎨 现代 UI 设计**:
+   - 基于 Streamlit 的响应式界面，包含卡片式结果展示、置信度动态标签和 Markdown 完美渲染。
 
-## 🌟 核心创新点 (Core Innovations)
-
-
-
-本项目不仅仅是一个简单的图像分类器，它在以下几个方面进行了创新：
-
-1. **双引擎智能架构 (Dual-Core AI)**:
-   - **视觉端 (Vision)**: 采用微调后的 **ResNet-18**，在本地毫秒级完成植物身份鉴定。
-   - **语言端 (LLM)**: 接入 **DeepSeek-V3** 大语言模型，打破了传统识别仅输出名称的局限。
-2. **环境感知型科普 (Context-Aware Knowledge)**:
-   - 系统支持输入**地理位置**与**季节信息**。AI Agent 会结合这些环境因子，分析植物出现在当下的合理性（例如："为什么这种热带植物会出现在北京的冬季室内？"），提供更具深度的观察建议。
-3. **专业级数据基座**:
-   - 摒弃通用小数据集，直接基于植物学界权威的 **Pl@ntNet-300K** 进行训练，确保了对 1081 种细分物种（包含特定亚种）的识别准确度。
-
-
+------
 
 ## 📂 项目结构
-
-
 
 Plaintext
 
 ```
 .
-├── app.py                              # [核心] Streamlit Web 应用主程序
-├── plant_recognizer.py                 # [脚本] 命令行识别工具
-├── data.pkl                            # [模型] 基于 Pl@ntNet-300K 训练的权重
+├── start.py                            # [入口] 程序的唯一启动入口 (负责Key管理与服务启动)
+├── app.py                              # [核心] Streamlit Web 界面与业务逻辑
+├── api_key_config.txt                  # [配置] 自动生成的 Key 配置文件 (首次运行后生成)
+├── data.pkl                            # [模型] ResNet-18 预训练权重
 ├── plantnet300K_species_id_2_name.json # [数据] 种类ID映射表
 ├── class_idx_to_species_id.json        # [数据] 索引映射表
 ├── requirements.txt                    # [环境] 依赖库列表
-├── test_images/                        # [资源] 内置测试图片文件夹 (包含4张样例)
-└── README.md                           # 项目说明文档
+└── README.md                           # 说明文档
 ```
 
+------
 
 
-## 🖼️ 测试资源 (Test Assets)
+## 🛠️ 环境准备
 
+建议使用 Conda 创建独立的虚拟环境。
 
-
-为了方便您快速测试，我在项目中内置了 **4 张代表性植物图片**（位于根目录或 `test_images/` 文件夹中）。您可以直接使用它们来验证识别效果。
-
-- **方式 A：使用内置图片** 直接上传项目中的示例图片进行测试。
-
-- **方式 B：下载完整数据集** 如果您需要更多样本，可以访问数据集官方地址下载：
-
-  > **https://zenodo.org/records/5645731**
-
-  *提示：该数据集内的任意一张图片都在本模型的训练范围内，识别效果最佳。*
-
-
-
-## 🛠️ 环境准备 (Environment)
-
-
-
-建议使用 Anaconda 或 Python 虚拟环境来运行本项目。
-
-
-
-### 1. 创建虚拟环境
-
-
-
-Bash
+### 1. 环境准备
 
 ```
-# 创建名为 plant_ai 的环境，python版本建议 3.8+
-conda create -n plant_ai python=3.9
+# 创建虚拟环境 (Python 3.9)
+conda create -n plant_ai python=3.9 # 请确保你的 Python 版本 >= 3.8。
 conda activate plant_ai
 ```
 
-
-
-### 2. 安装依赖库
-
-
-
-请在项目根目录下创建 `requirements.txt` 并填入以下内容，或者直接运行安装命令。
-
-**依赖列表 (requirements.txt):**
-
-Plaintext
+### 2. 安装依赖
 
 ```
-torch
-torchvision
-streamlit
-openai
-Pillow
+pip install -r requirements.txt
 ```
 
-**安装命令:**
-
-Bash
-
-```
-pip install torch torchvision streamlit openai Pillow
-```
-
-> **注意**: 如果您有 NVIDIA 显卡并希望使用 GPU 加速，请参考 [PyTorch 官网](https://pytorch.org/get-started/locally/) 安装对应 CUDA 版本的 torch。
-
-
-
-## 🚀 操作流程 (Operation Flow)
-
-
-
-
-
-### 模式一：启动 Web 可视化界面 (推荐)
-
-
-
-这是功能最完整的模式，支持 AI 科普生成。
-
-1. **启动应用**: 在终端运行以下命令：
-
-   Bash
-
-   ```
-   streamlit run app.py
-   ```
-
-2. **使用流程**:
-
-   - 浏览器会自动打开 `http://localhost:8501`。
-   - **侧边栏设置**: (可选) 输入您的 **DeepSeek API Key**。如果不输入，系统仅会输出植物名称，无法生成中文科普。
-   - **上传图片**: 使用项目自带的 4 张测试图，或上传您拍摄的照片。
-   - **填写环境**: 输入发现地点（如"公园路边"）和季节。
-   - **点击识别**: 点击 "🚀 开始识别 & 咨询 AI" 按钮。
-
-3. **查看结果**:
-
-   - 左侧显示识别到的拉丁学名及置信度。
-   - 下方显示由 DeepSeek 生成的植物简介、生长习性及趣味冷知识。
+**注意**: 如果您使用 NVIDIA 显卡，建议前往 [PyTorch 官网](https://pytorch.org/get-started/locally/) 获取适配 CUDA 版本的安装命令，以获得更快的推理速度。
 
 ------
 
+## 🚀 启动与使用 (Operation Flow)
 
+**⚠️ 请务必通过 `start.py` 启动，不要直接运行 `streamlit run`。**
 
-### 模式二：命令行快速识别 (CLI)
+### 第一步：启动程序
 
+在终端（Terminal/Console）中运行：
 
+```
+python start.py
+```
 
-适用于仅需要快速获取识别结果的场景。
+### 第二步：配置 API Key (仅首次)
 
-1. **运行脚本**:
+1. 如果你是**第一次运行**，程序会检测到没有配置文件。
 
-   Bash
-
-   ```
-   # 请确保 test_plant.jpg 存在，或者修改代码指定图片路径
-   python plant_recognizer.py
-   ```
-
-2. **输出示例**:
-
-   Plaintext
+2. **观察终端黑框**，会出现提示：
 
    ```
-   -> 检测到设备: cuda:0
-   -> 正在加载 1081 个植物类别名称...
-   ...
-   ✨ 植物识别结果 ✨
-   输入图片: test_images/sample1.jpg
-   预测类别: **Helianthus annuus L.**
-   置信度: **98.50%**
+   🌿 PlantAI Pro 启动向导
+   ⚠️  未检测到配置。
+   👉 请输入 DeepSeek API Key (输入后回车):
+   Input Key > [在此处粘贴你的Key]
    ```
+   
+3. 输入 Key 并回车后，系统会自动保存配置，并启动网页服务器。
 
+### 第三步：使用 Web 界面
 
-
-## ⚠️ 注意事项 & 常见问题
-
-
-
-1. **模型权重 (`data.pkl`)**:
-   - 由于文件体积限制，权重文件可能需要通过 Release 下载或 Git LFS 获取。请确保项目根目录下存在 `data.pkl`。
-2. **DeepSeek API**:
-   - Web 模式下的科普功能依赖外部 API。请确保您的网络可以访问 DeepSeek 服务。
-3. **JSON 映射文件**:
-   - `plantnet300K_species_id_2_name.json` 和 `class_idx_to_species_id.json` 包含 1081 个类别的关键信息，请勿删除或修改。
+1. 浏览器会自动打开 `http://localhost:8501`。
+2. **上传图片**: 点击左侧侧边栏上传植物照片。
+3. **填写环境**: 输入发现地点（如“校园”）和季节。
+4. **查看结果**:
+   - 系统会立即显示 **识别学名** 和 **置信度**。
+   - 点击 **“✨ 生成科普报告”**，AI 将流式输出详细介绍。
 
 ------
 
-*Created with ❤️ by [Your Name/Github Username]*
+## ❓ 常见问题 (FAQ)
+
+**Q1: 如何重置或更换 API Key？**
+
+- **方法 A**: 在项目根目录下找到 `api_key_config.txt` 文件，将其删除。下次运行 `python start.py` 时会重新询问。
+- **方法 B**: 在 Web 界面左侧侧边栏，点击“清除 Key”按钮（如有），然后重启程序。
+
+**Q2: 为什么终端卡住了，网页没打开？**
+
+- 请检查终端（黑框）是否有文字提示 `Input Key >`。程序在等待你输入 Key，输入并回车后才会继续。
+
+**Q3: 报错 `urllib.error.URLError: SSL...`**
+
+- 这是由于网络原因导致 PyTorch 无法下载预训练模型。
+- **解决**: 请确保 `data.pkl` 权重文件已经完整下载并放置在项目根目录下。
+
+------
+
+## 🖼️ 致谢与数据
+
+- **数据集**: [Pl@ntNet-300K](https://zenodo.org/records/5645731)
+- **大模型**: DeepSeek-V3 / R1
+- **框架**: PyTorch & Streamlit
